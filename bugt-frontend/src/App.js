@@ -1,21 +1,44 @@
-import logo from './logo.svg';
 import './App.css';
-import { Button, ChakraProvider, CSSReset, Flex, Heading, Text, useColorMode, VStack, IconButton } from '@chakra-ui/react'
-import { PhoneIcon, AddIcon, WarningIcon } from '@chakra-ui/icons'
-import Login from './components/LoginForm';
+import { Button,  Flex, Heading, Text,useColorMode, VStack, Spacer, HStack, useColorModeValue, } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import { BrowserRouter, Routes, Route, useNavigate, Link, } from 'react-router-dom'
+import { useState,useContext } from 'react';
+import Bug from './pages/bugs/bug';
+import Login from './pages/LoginForm';
+
+import { usercontext } from './config/useContext';
+import Org from './pages/org'
+import BugDetails from './pages/bugs/bugdetails';
+import ProtectedRoute from './config/ProtectedRoute';
 function App() {
   const { colorMode, toggleColorMode } = useColorMode();
-
+  const [temp, settemp] = useState([]);
+  const userContext=useContext(usercontext);
+  const navigate=useNavigate();
   return (
-    <div>
-      <Flex bg='black' justify={'space-between'} p='20px'>
-        <Heading textColor={'white'} >BugTracker</Heading>
-        <Button onClick={toggleColorMode} >{colorMode}</Button>
+      <Flex flexDirection={'column'} flex={1} maxH={'100%'} overflow={'hidden'}>
+        <Flex bg={useColorModeValue('#008080', 'black')} p='15px' mt={'-8px'} >
+          <Heading color={'white'}>BugT</Heading>
+          <Spacer />
+          <HStack spacing={5}>
+            <Text color={'white'} as={Link} to="/">Home</Text>
+            <Text color={'white'} as={Link} to="/orgs">Organisations</Text>
+            <Button onClick={toggleColorMode} mr={5} mt={2} colorScheme='gray'>{colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}</Button>
+            <Button disabled={!userContext.isLoggedin} onClick={()=>{
+              userContext.logout();
+            }}>{<ArrowForwardIcon/>}</Button>
+          </HStack>
+        </Flex>
+        <VStack justify={'center'} flex={1} maxH={'100%'} overflow={'auto'} mt={0}>
+          <Routes>          
+            <Route path='/' element={ <Login/>}></Route>
+            <Route path='/login' element={<Login />}></Route>
+            <Route path='/orgs/*' element={<ProtectedRoute><Org /></ProtectedRoute>}></Route>
+            <Route path='/bugs/*' element={<ProtectedRoute><Bug/></ProtectedRoute>}></Route>
+            <Route path='/bugdetails/*' element={<ProtectedRoute><BugDetails/></ProtectedRoute>}></Route>
+          </Routes>
+        </VStack>
       </Flex>
-      <Flex bg={'red'} align='center' justify={'center'} h='100%'>
-        <Login />
-      </Flex>
-    </div>
   );
 }
 

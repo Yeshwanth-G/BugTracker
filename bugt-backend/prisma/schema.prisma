@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users{
+  userid Int @id @default(autoincrement())
+  email String
+  password String
+  name String?
+  myorgs organisations[] @relation("createdby")
+  memberorgs organisations[] @relation("members")
+  createdbugs Bugs[] @relation("createdbugs")
+  assignedbugs Bugs[] @relation("assignedbugs")
+  conversations Conversations[]
+}
+
+model organisations{
+  orgid Int @id @default(autoincrement())
+  orgname String 
+  createdby users @relation("createdby",fields: [adminid],references: [userid])
+  adminid Int
+  bugs Bugs[]
+  members users[]@relation("members")
+  @@unique([orgname,adminid])
+}
+
+model Bugs{
+  bugid Int @id @default(autoincrement())
+  organisation organisations @relation(fields: [orgid],references: [orgid])
+  orgid Int 
+  bugtitle String
+  bugdesc String?
+  updatedate DateTime @default(now())
+  raisedby users @relation("createdbugs",fields: [raisedbyid],references: [userid])
+  raisedbyid Int
+  assigned users? @relation("assignedbugs",fields: [assignedid],references: [userid])
+  assignedid Int?
+  status BugStatus @default(NEWBUG)
+  conversations Conversations[]
+}
+model Conversations{
+  cid Int @id @default(autoincrement())
+  bug Bugs @relation(fields: [bugid],references: [bugid])
+  bugid Int
+  messege String
+  ctime DateTime @default(now())
+  usrid users @relation(fields: [userid],references: [userid])
+  userid Int
+}
+
+enum BugStatus{
+  NEWBUG
+  ASSIGNED
+  RESOLVED
+  REJECTED
+}
