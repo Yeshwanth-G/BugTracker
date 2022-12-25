@@ -80,9 +80,9 @@ export default function Bug_Admin({ state }) {
         var temp = await GetAllBugs(orgid);
         var pendingbugs = await temp.data.filter((x) => (x.status == "ASSIGNED"));
         var newbugs = await temp.data.filter((x) => (x.status == "NEWBUG"));
-        var tempallbugs = await temp.data.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assignedid={x.assignedid} bugid={x.bugid}></BugCard>))
-        pendingbugs = await pendingbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assignedid={x.assignedid} bugid={x.bugid}></BugCard>));
-        newbugs = await newbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assignedid={x.assignedid} bugid={x.bugid}></BugCard>));
+        var tempallbugs = await temp.data.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>))
+        pendingbugs = await pendingbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>));
+        newbugs = await newbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>));
         setpendingbugs(pendingbugs);
         setnewbugs(newbugs);
         setallbugs(tempallbugs);

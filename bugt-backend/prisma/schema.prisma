@@ -38,8 +38,7 @@ model Bugs{
   updatedate DateTime @default(now())
   raisedby users @relation("createdbugs",fields: [raisedbyid],references: [userid])
   raisedbyid Int
-  assigned users? @relation("assignedbugs",fields: [assignedid],references: [userid])
-  assignedid Int?
+  assigned users[] @relation("assignedbugs")
   status BugStatus @default(NEWBUG)
   conversations Conversations[]
 }

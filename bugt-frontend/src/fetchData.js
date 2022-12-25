@@ -151,6 +151,28 @@ export async function GetMesseges(bugid){
     if(res.status!=200)return {messege:data.messege,status:res.status}
     return {data:data.messege,status:res.status};
 }
+export async function AssignBug(userid,bugid){
+    let res=await fetch(`${URL}/bugs/assign/${userid}/${bugid}`,{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+    })
+    const data=await res.json();
+    return {messege:data.messege,status:res.status};
+}
+
+export async function GetAssignedUsers(bugid){
+    let res=await fetch(`${URL}/bugs/assigned_users/${bugid}`,{
+        method:'GET',
+        headers:{
+            'Content-Type': 'application/json',
+        },
+    })
+    const data=await res.json();
+    if(res.status!=200)return {messege:data.messege,status:res.status}
+    return {data:data.messege,status:res.status};
+}
 // (data.id,data.bugid,msg);
 export async function Postmsg(userid,bugid,msg){
     let res=await fetch(`${URL}/bugs/conv/${bugid}/${userid}`,{

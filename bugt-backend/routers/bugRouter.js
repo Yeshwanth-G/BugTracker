@@ -9,7 +9,11 @@ router.get('/all/:id', async (req, res) => {
                 orgid,
             },
             include: {
-                bugs: true,
+                bugs:{
+                   include:{
+                        assigned:true
+                    }
+                }
             }
         })
         res.status(200).json({
@@ -102,6 +106,53 @@ router.get('/assigned/:id/:orgid', async (req, res) => {
     }
 })
 
+router.get('/assigned_users/:bugid',async (req,res)=>{
+const bugid=parseInt(req.params.bugid);
+try{
+    const temp=await prisma.bugs.findMany({
+        where:{
+            bugid,
+        
+        },
+        select:{
+            assigned:true,
+        }
+    }) 
+    res.status(200).json({
+        messege:temp[0].assigned
+    })
+}catch(err){
+res.status(400).json({
+    messege:err
+})
+}
+})
+
+router.post('/assign/:id/:bugid',async (req,res)=>{
+    const userid = parseInt(req.params.id);
+    const bugid = parseInt(req.params.bugid);
+    try{
+        await prisma.users.update({
+            where:{
+                userid,
+            },
+            data:{
+                assignedbugs:{
+                    connect:{
+                        bugid
+                    }
+                }
+            }
+        })
+        res.status(200).json({
+            messege:"Assigned Successfully"
+        })
+    }catch(err){
+        res.status(400).json({
+            messege:err
+        })
+    }
+})
 // --------------
 router.get('/pending/:orgid', async (req, res) => {
     const orgid = parseInt(req.params.orgid);
@@ -177,6 +228,8 @@ router.put('/updatestatus/:bugid/:orgid', async (req, res) => {
         })
     }
 })
+
+
 
 //-------
 router.post('/conv/:bugid/:userid',async (req,res)=>{

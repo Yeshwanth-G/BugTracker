@@ -74,14 +74,18 @@ export default function Bug_Member({state}){
             </DrawerContent>
         </Drawer>
     )
+    const checkAssigned=(assignedArray,userid)=>{
+        const temp=assignedArray.filter((x)=>x.userid==userid)
+        return (temp.length!=0);
+    }
     const fetch = async () => {
         setloading(true);
         var temp = await GetAllBugs(orgid);
-        var assignedbugs = await temp.data.filter((x) => (x.assignedid == id));
+        var assignedbugs = await temp.data.filter((x)=>(checkAssigned(x.assigned,id)));
         var raisedbugs = await temp.data.filter((x) => (x.raisedbyid == id));
-       var tempallbugs = await temp.data.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assignedid={x.assignedid} bugid={x.bugid}></BugCard>))
-        assignedbugs = await assignedbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate}  orgid={orgid} orgname={orgname} adminid={adminid} assignedid={x.assignedid} bugid={x.bugid}></BugCard>));
-        raisedbugs = await raisedbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate}  orgid={orgid} orgname={orgname} adminid={adminid} assignedid={x.assignedid} bugid={x.bugid}></BugCard>));
+        var tempallbugs = await temp.data.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>))
+        assignedbugs = await assignedbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate}  orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>));
+        raisedbugs = await raisedbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate}  orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>));
         setassignedbugs(assignedbugs);
         setsearch(temp.data);
         setraisedbugs(raisedbugs);
@@ -91,8 +95,8 @@ export default function Bug_Member({state}){
     }
     useEffect(() => {
         fetch();
-    }
-        , []);
+    },[]);
+
     return (
         <VStack flex={1} w={"100%"} overflowY={'auto'} wrap={'wrap'}>
             <HStack  alignItems={'center'} paddingX={5} w={'100%'} paddingY={3}>

@@ -3,6 +3,7 @@ import { useEffect, useState,useContext } from "react";
 import { GetMembers,AddMember,RemoveMember } from "../fetchData";
 import { usercontext } from "../config/useContext";
 import {DeleteIcon} from "@chakra-ui/icons"
+import UserCard from "./bugs/userCard";
 export default function Members({ orgid, adminid }) {
     const [members, setmembers] = useState(null);
     const [admindetails, setadmindetails] = useState(null);
@@ -82,15 +83,7 @@ export default function Members({ orgid, adminid }) {
                 {admindetails != null && members != null &&
                     <>
                         {admindetails.map((x) => (
-                            <Box bg={boxbg} w={'100%'} padding={2} rounded='md'>
-                                <HStack>
-                                    <Avatar src={`https://gravatar.com/avatar/${x.userid}?d=retro`} size='xs' />
-                                    <Text>{x.name}</Text>
-                                    <Spacer />
-                                    <Text fontSize={'sm'} fontWeight={'semibold'}>Admin</Text>
-                                </HStack>
-                                <Text>{x.email}</Text>
-                            </Box>
+                           <UserCard name={x.name} email={x.email} userid={x.userid} role={'Admin'}/>
                         ))}
                         <Divider />
                     {members.length==0?
