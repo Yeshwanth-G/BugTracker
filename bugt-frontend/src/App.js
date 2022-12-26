@@ -3,11 +3,11 @@ import { Button,  Flex, Heading, Text,useColorMode, VStack, Spacer, HStack, useC
 import { MoonIcon, SunIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { BrowserRouter, Routes, Route, useNavigate, Link, } from 'react-router-dom'
 import { useState,useContext } from 'react';
-import Bug from './pages/bugs/bug';
-import Login from './pages/LoginForm';
+import Bug from './pages/bugs/bug_redirect';
+import Login from './pages/Auth/LoginForm';
 
 import { usercontext } from './config/useContext';
-import Org from './pages/org'
+import Org from './pages/Org/org_dashboard'
 import BugDetails from './pages/bugs/bugdetails';
 import ProtectedRoute from './config/ProtectedRoute';
 function App() {

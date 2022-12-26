@@ -9,18 +9,18 @@ import {
     ModalCloseButton, VStack, HStack, Spacer, Flex, Divider, useColorModeValue, useDisclosure, useToast, Input
 } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
-import { statuscolor } from "./bugCard";
+import { statuscolor } from "./components/bugCard";
 import { button_styles } from "../../components/button_styles";
 import { useEffect, useState } from "react";
 import { GetAssignedUsers, GetMesseges,PutRequest } from "../../fetchData";
 import { usercontext } from "../../config/useContext";
 import { useContext } from "react";
 import AssignForm from "./components/AssignForm";
-import { getusername } from "./convcard";
+import { getusername } from "./components/convcard";
 import { UpdateStatus } from "../../fetchData";
 import { Postmsg } from "../../fetchData";
-import Convcard from "./convcard";
-import UserCard from "./userCard";
+import Convcard from "./components/convcard";
+import UserCard from "./components/userCard";
 
 export default function BugDetails() {
     const location = useLocation();

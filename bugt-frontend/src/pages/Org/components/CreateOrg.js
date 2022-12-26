@@ -2,33 +2,33 @@ import { Button, FormControl, FormLabel, Input, VStack, Flex, Spacer, InputGroup
 import { PhoneIcon, AddIcon, WarningIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
+import { CreateOrg as OrgCreate } from "../../../fetchData";
 import { ErrorMessage, Field, Formik, Form } from 'formik';
-import { usercontext } from "../../config/useContext";
-import { useContext } from "react";
 import * as yup from 'yup'
-import { button_styles } from "../../components/button_styles";
-import { bugCreate } from "../../fetchData";
-
-const bugSchema = yup.object().shape({
+import { FSignup } from "../../../fetchData";
+import { button_styles } from "../../../components/button_styles";
+import { usercontext } from "../../../config/useContext";
+import { useContext } from "react";
+const orgSchema = yup.object().shape({
     name: yup.string().required('Required'),
-    desc: yup.string().required('Required'),
 })
-function Createbug({onClose,orgid}) {
+function CreateOrg({onClose}) {
     const toast=useToast();
     const userContext=useContext(usercontext);
     const id = userContext.user.id;
+    const name = userContext.user.name;
     return (
         <VStack p={5}>
             <Formik
                 initialValues={
                     {
-                        name:'',desc:''
+                        name:''
                     }
 
                 }
-                validationSchema={bugSchema}
+                validationSchema={orgSchema}
                 onSubmit={async (values) => {
-                    const res=await bugCreate(values.name,values.desc,id,orgid);
+                    const res=await OrgCreate(values.name,id);
                     toast({
                     title:res.messege,
                     status:res.status!=200?'error':"success",
@@ -40,24 +40,17 @@ function Createbug({onClose,orgid}) {
                     <Form>
                         <VStack>
                         <FormControl>
-                            <FormLabel>bug Name</FormLabel>
-                            <Input name='name' type='text' placeholder='Enter bug Name' onChange={handleChange} onBlur={handleBlur} value={values.name}></Input>
+                            <FormLabel>Org Name</FormLabel>
+                            <Input name='name' type='text' placeholder='Enter Org Name' onChange={handleChange} onBlur={handleBlur} value={values.name}></Input>
                             {
                                 touched.name && errors.name ? <Text color={'red'}>{errors.name}</Text> : null
-                            }
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>description</FormLabel>
-                            <Input name='desc' type='text' placeholder='short description' onChange={handleChange} onBlur={handleBlur} value={values.desc}></Input>
-                            {
-                                touched.desc && errors.desc ? <Text color={'red'}>{errors.desc}</Text> : null
                             }
                         </FormControl>
                         <Flex width={'100%'} pt={5}>
                             <Button
                             type='submit'
                             sx={button_styles}
-                            >Raise</Button>
+                            >CREATE</Button>
                             <Spacer />
                             <Button
                                 sx={button_styles}
@@ -71,4 +64,4 @@ function Createbug({onClose,orgid}) {
         </VStack>
     )
 }
-export default Createbug;
+export default CreateOrg;

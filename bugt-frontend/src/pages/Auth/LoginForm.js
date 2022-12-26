@@ -4,12 +4,12 @@ import { Field, ErrorMessage, replace } from "formik";
 import { useState,useContext, useEffect } from "react";
 import { Form, Formik } from "formik";
 import Signup from "./Signup";
-import { FLogin } from "../fetchData";
-import { button_styles } from "../components/button_styles";
+import { FLogin } from "../../fetchData";
+import { button_styles } from "../../components/button_styles";
 import { useNavigate,useLocation } from "react-router-dom";
-import bughome from "../assets/bughome.svg"
+import bughome from "../../assets/bughome.svg"
 import * as yup from 'yup'
-import { usercontext } from "../config/useContext";
+import { usercontext } from "../../config/useContext";
 const siginupSchema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Required'),
     password: yup.string()

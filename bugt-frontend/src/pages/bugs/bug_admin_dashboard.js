@@ -1,45 +1,51 @@
-import { Button, 
-    Heading, 
-    Box, 
+import {
+    Button,
+    Heading,
+    Box,
     Spinner,
     VStack,
     Spacer,
-    ModalContent, 
-    ModalHeader, 
-    Modal, 
-    ModalBody, 
-    ModalOverlay, 
-    ModalCloseButton, 
+    ModalContent,
+    ModalHeader,
+    Modal,
+    ModalBody,
+    ModalOverlay,
+    ModalCloseButton,
     Drawer,
     DrawerBody,
-    DrawerFooter,
     DrawerHeader,
     DrawerOverlay,
     DrawerContent,
     DrawerCloseButton,
-    Input,
+    Menu,  
+    MenuButton,
+    MenuList,
+    MenuItem,
     useDisclosure,
-        HStack } from "@chakra-ui/react";
-import Createbug from "./createbugform";
-import BugCard from "./bugCard";
-import { GetAllBugs } from "../../fetchData";
-import Members from "../Members";
-import { useState,useEffect,useContext } from "react";
-import Searchbug from "./SearchBugs";
-import { useLocation } from "react-router-dom";
+    HStack
+} from "@chakra-ui/react";
+import Createbug from "./components/createbugform";
+import BugCard from "./components/bugCard";
+import Members from "../Org/components/Members";
+import { GetAllBugs,GetRequests } from "../../fetchData";
+import { useState, useEffect, useContext } from "react";
+import Searchbug from "./components/SearchBugs";
 import { usercontext } from "../../config/useContext";
-export default function Bug_Member({state}){
+import { useNavigate } from "react-router-dom";
+export default function Bug_Admin({ state }) {
     const [isloading, setloading] = useState(false);
     const [allbugs, setallbugs] = useState([]);
-    const [assignedbugs, setassignedbugs] = useState(null);
-    const [raisedbugs, setraisedbugs] = useState(null);
-    const [searchbugs,setsearch]=useState([]);
-    const userContext=useContext(usercontext);
+    const [searchbugs, setsearch] = useState([]);
+    const [requests,setrequests]=useState([]);
+    const [pendingbugs, setpendingbugs] = useState(null);//pendingbugs
+    const [newbugs, setnewbugs] = useState(null);//newbugs
+    const userContext = useContext(usercontext);
     const id = userContext.user.id;
     const name = userContext.user.name;
-    const orgid=parseInt(state.orgid);
-    const orgname=state.orgname;
-    const adminid=parseInt(state.adminid);
+    const orgid = parseInt(state.orgid);
+    const orgname = state.orgname;
+    const navigate=useNavigate();
+    const adminid = parseInt(state.adminid);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: draweropen, onOpen: draweronOpen, onClose: draweronClose } = useDisclosure();
     const mclose = () => {
@@ -53,7 +59,7 @@ export default function Bug_Member({state}){
                 <ModalHeader textAlign={'center'}>Raise Bug</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody >
-                    <Createbug onClose={mclose} orgid={orgid}/>
+                    <Createbug onClose={mclose} orgid={orgid} />
                 </ModalBody>
             </ModalContent>
         </Modal>
@@ -74,42 +80,60 @@ export default function Bug_Member({state}){
             </DrawerContent>
         </Drawer>
     )
-    const checkAssigned=(assignedArray,userid)=>{
-        const temp=assignedArray.filter((x)=>x.userid==userid)
-        return (temp.length!=0);
-    }
+
+    const menuf=(
+        <Menu>
+        <MenuButton as={Button}>
+        Requests
+      </MenuButton>
+        <MenuList maxH={"150px"} maxW={'250px'} overflow={"auto"}>
+        {
+        requests.length?
+        requests.map((x)=>(
+            <MenuItem onClick={()=>{
+                navigate("/bugdetails",{state:{props:{...x.bug,adminid}}});
+            }}>{x.user.name} has requested for {x.bug.bugtitle}</MenuItem>
+        )):<MenuItem>No Requests</MenuItem>
+        }
+      </MenuList>
+        </Menu>
+    )
+
     const fetch = async () => {
         setloading(true);
         var temp = await GetAllBugs(orgid);
-        var assignedbugs = await temp.data.filter((x)=>(checkAssigned(x.assigned,id)));
-        var raisedbugs = await temp.data.filter((x) => (x.raisedbyid == id));
+        var req=await GetRequests(orgid);
+        if(req.status==200)
+        setrequests(req.data);
+        var pendingbugs = await temp.data.filter((x) => (x.status == "ASSIGNED"));
+        var newbugs = await temp.data.filter((x) => (x.status == "NEWBUG"));
         var tempallbugs = await temp.data.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>))
-        assignedbugs = await assignedbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate}  orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>));
-        raisedbugs = await raisedbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate}  orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>));
-        setassignedbugs(assignedbugs);
-        setsearch(temp.data);
-        setraisedbugs(raisedbugs);
-        setsearch(temp.data);
+        pendingbugs = await pendingbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>));
+        newbugs = await newbugs.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>));
+        setpendingbugs(pendingbugs);
+        setnewbugs(newbugs);
         setallbugs(tempallbugs);
+        setsearch(temp.data);
         setloading(false);
     }
     useEffect(() => {
         fetch();
-    },[]);
-
+    }, []);
     return (
         <VStack flex={1} w={"100%"} overflowY={'auto'} wrap={'wrap'}>
-            <HStack  alignItems={'center'} paddingX={5} w={'100%'} paddingY={3}>
-            <Heading size={'md'}>Hi {name} !!</Heading>
-            <Spacer/>
+            <HStack alignItems={'center'} paddingX={5} w={'100%'} paddingY={3}>
+                <Heading size={'md'}>Hi {name} !!</Heading>
+                <Spacer />
                 <Box pos={'relative'}>
-                    <Searchbug allbugs={searchbugs}  adminid={adminid}/>
+                    <Searchbug allbugs={searchbugs} adminid={adminid} />
                 </Box>
+                {menuf}
                 <Button onClick={onOpen} >Raise Bug</Button>
                 <Button onClick={draweronOpen}>Members</Button>
             </HStack>
-            <HStack flex={1} w={'100%'} justify={'space-around'} alignItems={'flex-start'} maxH={'100%'} overflowY={'auto'} wrap={'wrap'}>
-                {isloading && <Heading>{<Spinner/>}</Heading>}
+            <Heading p={2}>{orgname}</Heading>
+            <HStack flex={1} w={'100%'} justify={'space-around'} alignItems={'flex-start'} maxH={'100%'} overflowY={'auto'} wrap={'wrap'} >
+                {isloading && <Heading>{<Spinner />}</Heading>}
                 {!isloading && allbugs &&
                     <>
                         <VStack h={'80%'} padding={'2%'} rounded={'md'} borderWidth={'medium'} >
@@ -119,15 +143,15 @@ export default function Bug_Member({state}){
                             </VStack>
                         </VStack>
                         <VStack h={'80%'} padding={'2%'} rounded={'md'} borderWidth={'medium'} >
-                            <Heading>assignedbugs</Heading>
+                            <Heading>pendingbugs</Heading>
                             <VStack spacing={2} overflowX={'hidden'} overflowY={'auto'} p={'5%'}>
-                                {assignedbugs}
+                                {pendingbugs}
                             </VStack>
                         </VStack>
                         <VStack h={'80%'} padding={'2%'} rounded={'md'} borderWidth={'medium'} >
-                            <Heading>raisedbugs</Heading>
+                            <Heading>newbugs</Heading>
                             <VStack spacing={2} overflowX={'hidden'} overflowY={'auto'} p={'5%'}>
-                                {raisedbugs}
+                                {newbugs}
                             </VStack>
                         </VStack>
                     </>
@@ -136,7 +160,5 @@ export default function Bug_Member({state}){
                 {drawer}
             </HStack>
         </VStack>
-
-
     )
 }

@@ -1,12 +1,12 @@
 import { Button, FormControl, Heading, Box, FormLabel,Spinner, Image, Input, VStack, Flex, Spacer, InputGroup, InputRightElement, Text, ModalContent, ModalHeader, Modal, ModalBody, ModalOverlay, ModalCloseButton, ModalFooter, useDisclosure, HStack } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
-import OrgCard from "../components/OrgCard";
+import OrgCard from "./components/OrgCard";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
-import { GetAllOrgs } from "../fetchData";
-import CreateOrgForm from "./CreateOrg";
-import { usercontext } from "../config/useContext";
-import SearchOrg from "./searchorg";
-import Login from "../pages/LoginForm"
+import { GetAllOrgs } from "../../fetchData";
+import CreateOrgForm from "./components/CreateOrg";
+import { usercontext } from "../../config/useContext";
+import SearchOrg from "./components/searchorg";
+import Login from "../Auth/LoginForm"
 
 export default function Orgainsations() {
     const [isloading, setloading] = useState(false);

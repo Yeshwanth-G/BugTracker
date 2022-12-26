@@ -1,9 +1,9 @@
 import { Button, HStack, Input, Spinner, VStack, Box, useColorModeValue, Text, Avatar, Divider, Spacer, Heading, TagLeftIcon, useToast } from "@chakra-ui/react";
 import { useEffect, useState,useContext } from "react";
-import { GetMembers,AddMember,RemoveMember } from "../fetchData";
-import { usercontext } from "../config/useContext";
+import { GetMembers,AddMember,RemoveMember } from "../../../fetchData";
+import { usercontext } from "../../../config/useContext";
 import {DeleteIcon} from "@chakra-ui/icons"
-import UserCard from "./bugs/userCard";
+import UserCard from "../../bugs/components/userCard";
 export default function Members({ orgid, adminid }) {
     const [members, setmembers] = useState(null);
     const [admindetails, setadmindetails] = useState(null);

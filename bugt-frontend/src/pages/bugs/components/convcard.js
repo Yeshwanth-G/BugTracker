@@ -1,7 +1,7 @@
 import { Flex, Heading, HStack, Spacer, Text,Box, Divider, VStack, Avatar } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import moment from "moment"
-import { URL } from "../../fetchData";
+import { URL } from "../../../fetchData";
 import { useColorModeValue } from "@chakra-ui/react";
 export async function getusername(userid){
 const res= await fetch(`${URL}/auth/user_name/${userid}`,{

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import { ErrorMessage, Field, Formik, Form } from 'formik';
 import * as yup from 'yup'
-import { FSignup } from "../fetchData";
-import { button_styles } from "../components/button_styles";
+import { FSignup } from "../../fetchData";
+import { button_styles } from "../../components/button_styles";
 
 const siginupSchema = yup.object().shape({
     password: yup.string()
