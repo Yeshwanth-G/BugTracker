@@ -23,7 +23,6 @@ export default function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const userContext=useContext(usercontext);
-    console.log("userContext",userContext);
     const modal = (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -37,7 +36,6 @@ export default function Login() {
         </Modal>
     )
     useEffect(()=>{
-        console.log(typeof userContext.isLoggedin,userContext.isLoggedin);
         if(userContext.isLoggedin==true){
             navigate("/orgs",{replace:true})
         }

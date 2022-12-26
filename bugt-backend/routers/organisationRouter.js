@@ -62,7 +62,7 @@ router.post('/create/:id', async (req, res) => {
             }
         })
         res.status(200).json({
-            messege:"Added Member Successfully"
+            messege:"Created Org Successfully"
         })
     } catch (err) {
         res.status(400).json({
@@ -132,7 +132,6 @@ router.put('/members/:id',async (req,res)=>{
         throw "User Not Found"
     }
     const userid=temp1[0].userid
-    console.log(temp1);
     await prisma.users.update({
         where:{
             userid

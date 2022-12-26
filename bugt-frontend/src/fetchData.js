@@ -79,7 +79,6 @@ export async function GetMembers(orgid){
 }
 
 export async function AddMember(email,orgid){
-    console.log("Addmember",email,orgid);
     let res=await fetch(`${URL}/orgs/members/${orgid}`,{
         method:'PUT',
         headers:{
@@ -173,7 +172,6 @@ export async function GetAssignedUsers(bugid){
     if(res.status!=200)return {messege:data.messege,status:res.status}
     return {data:data.messege,status:res.status};
 }
-// (data.id,data.bugid,msg);
 export async function Postmsg(userid,bugid,msg){
     let res=await fetch(`${URL}/bugs/conv/${bugid}/${userid}`,{
         method:'POST',
@@ -182,6 +180,64 @@ export async function Postmsg(userid,bugid,msg){
                 messege:msg,
             }
         ),
+        headers:{
+            'Content-Type': 'application/json',
+        },
+    })
+    const data=await res.json();
+    return {messege:data.messege,status:res.status};
+}
+
+export async function UpdateStatus(bugid,orgid,bugstatus){
+    let res=await fetch(`${URL}/bugs/updatestatus/${bugid}/${orgid}`,{
+        method:'PUT',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+            bugstatus
+        })
+    })
+    const data=await res.json();
+    return {data:data.messege,status:res.status}
+}
+
+export async function GetRequests(orgid){
+    let res=await fetch(`${URL}/bugs/requests/${orgid}`,{
+        method:'GET',
+        headers:{
+            'Content-Type': 'application/json',
+        },
+    })
+    const data=await res.json();
+    return {data:data.messege,status:res.status};
+}
+
+export async function GetRequestedUsers(bugid){
+    let res=await fetch(`${URL}/bugs/requestedusers/${bugid}`,{
+        method:'GET',
+        headers:{
+            'Content-Type': 'application/json',
+        },
+    })
+    const data=await res.json();
+    return {data:data.messege,status:res.status};
+}
+
+export async function PutRequest(orgid,bugid,userid){
+    let res=await fetch(`${URL}/bugs/requests/${orgid}/${bugid}/${userid}`,{
+        method:'POST',
+        headers:{
+            'Content-Type': 'application/json',
+        },
+    })
+    const data=await res.json();
+    return {messege:data.messege,status:res.status};
+}
+
+export async function DeleteRequest(userid,bugid,orgid){
+    let res=await fetch(`${URL}/bugs/delete_req/${orgid}/${bugid}/${userid}`,{
+        method:'POST',
         headers:{
             'Content-Type': 'application/json',
         },

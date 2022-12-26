@@ -231,7 +231,7 @@ router.put('/updatestatus/:bugid/:orgid', async (req, res) => {
 
 
 
-//-------
+//---conv
 router.post('/conv/:bugid/:userid',async (req,res)=>{
     const bugid=parseInt(req.params.bugid);
     const userid=parseInt(req.params.userid);
@@ -267,6 +267,96 @@ router.get('/conv/:bugid',async (req,res)=>{
         })
         res.status(200).json({
             messege:temp[0].conversations
+        })
+    }catch(err){
+        res.status(400).json({
+            messege:err
+        })
+    }
+})
+
+//--requests
+
+router.get('/requests/:orgid',async (req,res)=>{
+    const orgid=parseInt(req.params.orgid);
+    try{
+    let temp=await prisma.Requests.findMany({
+        where:{
+            orgid,
+        },
+        include:{
+            bug:true,
+            user:true
+        }
+
+    })
+    res.status(200).json({
+        messege:temp
+    })
+}catch(err){
+    res.status(400).json({
+        messege:err
+    })
+}
+})
+
+router.get('/requestedusers/:bugid',async (req,res)=>{
+    const bugid=parseInt(req.params.bugid);
+    try{
+    let temp=await prisma.Requests.findMany({
+        where:{
+            bugid,
+        },
+        include:{
+            user:true
+        }
+    })
+    res.status(200).json({
+        messege:temp
+    })
+}catch(err){
+    res.status(400).json({
+        messege:err
+    })
+}
+})
+
+router.post('/requests/:orgid/:bugid/:userid',async (req,res)=>{
+    const orgid=parseInt(req.params.orgid);
+    const bugid=parseInt(req.params.bugid);
+    const userid=parseInt(req.params.userid);
+    try{
+        const temp=await prisma.Requests.create({
+            data:{
+                orgid,
+                bugid,
+                userid,
+            }
+        })
+        res.status(200).json({
+            messege:'Request Sent'
+        })
+    }catch(err){
+        res.status(400).json({
+            messege:err
+        })
+    }
+})
+
+router.post('/delete_req/:orgid/:bugid/:userid',async (req,res)=>{
+    const orgid=parseInt(req.params.orgid);
+    const bugid=parseInt(req.params.bugid);
+    const userid=parseInt(req.params.userid);
+    try{
+        const temp=await prisma.Requests.deleteMany({
+            where:{
+                orgid,
+                bugid,
+                userid,
+            }
+        })
+        res.status(200).json({
+            messege:'Request Deleted'
         })
     }catch(err){
         res.status(400).json({

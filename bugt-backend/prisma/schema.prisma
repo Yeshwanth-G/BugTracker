@@ -17,6 +17,7 @@ model users{
   createdbugs Bugs[] @relation("createdbugs")
   assignedbugs Bugs[] @relation("assignedbugs")
   conversations Conversations[]
+  requests Requests[]
 }
 
 model organisations{
@@ -26,6 +27,7 @@ model organisations{
   adminid Int
   bugs Bugs[]
   members users[]@relation("members")
+  requests Requests[]
   @@unique([orgname,adminid])
 }
 
@@ -41,6 +43,7 @@ model Bugs{
   assigned users[] @relation("assignedbugs")
   status BugStatus @default(NEWBUG)
   conversations Conversations[]
+  requests Requests[]
 }
 model Conversations{
   cid Int @id @default(autoincrement())
@@ -51,7 +54,16 @@ model Conversations{
   usrid users @relation(fields: [userid],references: [userid])
   userid Int
 }
-
+model Requests{
+  rid Int @id @default(autoincrement())
+  bug Bugs @relation(fields: [bugid],references: [bugid])
+  bugid Int
+  org organisations @relation(fields: [orgid],references: [orgid])
+  orgid Int
+  user users @relation(fields: [userid],references: [userid])
+  userid Int
+  ctime DateTime @default(now())
+}
 enum BugStatus{
   NEWBUG
   ASSIGNED

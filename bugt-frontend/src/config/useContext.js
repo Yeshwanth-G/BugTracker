@@ -11,7 +11,6 @@ export default function ContextWrapper(props){
         setuser(userdetails);
         setloggedin(true);
         navigate("/orgs",{replace:true});
-        console.log("userdetails",userdetails);
     }
     const logout=()=>{
         setloggedin(false);

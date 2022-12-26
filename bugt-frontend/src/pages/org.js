@@ -65,12 +65,14 @@ export default function Orgainsations() {
                     <>
                         <VStack h={'80%'} padding={'2%'} rounded={'md'} borderWidth={'medium'} >
                             <Heading>Your Organisations</Heading>
+                            <Text fontSize={'sm'}>(Orgs you created)</Text>
                             <VStack spacing={2} overflowX={'hidden'} overflowY={'auto'} p={'5%'}>
                                 {yourorgs}
                             </VStack>
                         </VStack>
                         <VStack h={'80%'} padding={'2%'} rounded={'md'} borderWidth={'medium'} >
                             <Heading>Other Organisations</Heading>
+                            <Text fontSize={'sm'}>(Orgs you are member of)</Text>
                             <VStack spacing={2} overflowX={'hidden'} overflowY={'auto'} p={'5%'}>
                                 {otherorgs}
                             </VStack>

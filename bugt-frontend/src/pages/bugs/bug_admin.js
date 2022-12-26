@@ -13,26 +13,30 @@ import {
     ModalCloseButton,
     Drawer,
     DrawerBody,
-    DrawerFooter,
     DrawerHeader,
     DrawerOverlay,
     DrawerContent,
     DrawerCloseButton,
-    Input,
+    Menu,  
+    MenuButton,
+    MenuList,
+    MenuItem,
     useDisclosure,
     HStack
 } from "@chakra-ui/react";
 import Createbug from "./createbugform";
 import BugCard from "./bugCard";
 import Members from "../Members";
-import { GetAllBugs } from "../../fetchData";
+import { GetAllBugs,GetRequests } from "../../fetchData";
 import { useState, useEffect, useContext } from "react";
 import Searchbug from "./SearchBugs";
 import { usercontext } from "../../config/useContext";
+import { useNavigate } from "react-router-dom";
 export default function Bug_Admin({ state }) {
     const [isloading, setloading] = useState(false);
     const [allbugs, setallbugs] = useState([]);
     const [searchbugs, setsearch] = useState([]);
+    const [requests,setrequests]=useState([]);
     const [pendingbugs, setpendingbugs] = useState(null);//pendingbugs
     const [newbugs, setnewbugs] = useState(null);//newbugs
     const userContext = useContext(usercontext);
@@ -40,6 +44,7 @@ export default function Bug_Admin({ state }) {
     const name = userContext.user.name;
     const orgid = parseInt(state.orgid);
     const orgname = state.orgname;
+    const navigate=useNavigate();
     const adminid = parseInt(state.adminid);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: draweropen, onOpen: draweronOpen, onClose: draweronClose } = useDisclosure();
@@ -75,9 +80,31 @@ export default function Bug_Admin({ state }) {
             </DrawerContent>
         </Drawer>
     )
+
+    const menuf=(
+        <Menu>
+        <MenuButton as={Button}>
+        Requests
+      </MenuButton>
+        <MenuList maxH={"150px"} maxW={'250px'} overflow={"auto"}>
+        {
+        requests.length?
+        requests.map((x)=>(
+            <MenuItem onClick={()=>{
+                navigate("/bugdetails",{state:{props:{...x.bug,adminid}}});
+            }}>{x.user.name} has requested for {x.bug.bugtitle}</MenuItem>
+        )):<MenuItem>No Requests</MenuItem>
+        }
+      </MenuList>
+        </Menu>
+    )
+
     const fetch = async () => {
         setloading(true);
         var temp = await GetAllBugs(orgid);
+        var req=await GetRequests(orgid);
+        if(req.status==200)
+        setrequests(req.data);
         var pendingbugs = await temp.data.filter((x) => (x.status == "ASSIGNED"));
         var newbugs = await temp.data.filter((x) => (x.status == "NEWBUG"));
         var tempallbugs = await temp.data.map((x) => (<BugCard bugtitle={x.bugtitle} bugdesc={x.bugdesc} status={x.status} raisedbyid={x.raisedbyid} updatedate={x.updatedate} orgid={orgid} orgname={orgname} adminid={adminid} assigned={x.assigned} bugid={x.bugid}></BugCard>))
@@ -100,10 +127,11 @@ export default function Bug_Admin({ state }) {
                 <Box pos={'relative'}>
                     <Searchbug allbugs={searchbugs} adminid={adminid} />
                 </Box>
+                {menuf}
                 <Button onClick={onOpen} >Raise Bug</Button>
                 <Button onClick={draweronOpen}>Members</Button>
             </HStack>
-            <HStack flex={1} w={'100%'} justify={'space-around'} alignItems={'flex-start'} maxH={'100%'} overflowY={'auto'} wrap={'wrap'}>
+            <HStack flex={1} w={'100%'} justify={'space-around'} alignItems={'flex-start'} maxH={'100%'} overflowY={'auto'} wrap={'wrap'} >
                 {isloading && <Heading>{<Spinner />}</Heading>}
                 {!isloading && allbugs &&
                     <>

@@ -9,9 +9,6 @@ const res= await fetch(`${URL}/auth/user_name/${userid}`,{
     headers:{
         'Content-Type':'application/json'
     },
-    // body:JSON.stringify({
-    //     userid
-    // })
 })
 const data=await res.json();
 if(res.status==200)return data.name;
