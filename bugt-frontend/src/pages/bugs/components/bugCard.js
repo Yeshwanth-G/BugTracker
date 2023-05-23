@@ -1,7 +1,6 @@
 import { Button,Card,CardHeader, FormControl,Heading, Box, FormLabel, Image, Input, Breadcrumb, BreadcrumbLink, Link, VStack, Flex, Spacer, InputGroup, InputRightElement, Text, ModalContent, ModalHeader, Modal, ModalBody, ModalOverlay, ModalCloseButton, ModalFooter, useDisclosure, HStack, BreadcrumbItem } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { usercontext } from "../../../config/useContext";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getusername } from "./convcard";
 export function statuscolor(bugstatus){
   if(bugstatus=='NEWBUG')return 'blue'

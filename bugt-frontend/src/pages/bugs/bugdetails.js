@@ -21,6 +21,7 @@ import { UpdateStatus } from "../../fetchData";
 import { Postmsg } from "../../fetchData";
 import Convcard from "./components/convcard";
 import UserCard from "./components/userCard";
+import { useSelector } from "react-redux";
 
 export default function BugDetails() {
     const location = useLocation();
@@ -33,7 +34,7 @@ export default function BugDetails() {
     const [cstatus,setstatus]=useState(data.status);
     const [assigned_users, setassignedusers] = useState([]);
     const userContext = useContext(usercontext);
-    const userid = userContext.user.id;
+    const {id:userid}=useSelector((state)=>state.user.user)
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast()
    

@@ -4,14 +4,13 @@ import { GetMembers,AddMember,RemoveMember } from "../../../fetchData";
 import { usercontext } from "../../../config/useContext";
 import {DeleteIcon} from "@chakra-ui/icons"
 import UserCard from "../../bugs/components/userCard";
+import { useSelector } from "react-redux";
 export default function Members({ orgid, adminid }) {
     const [members, setmembers] = useState(null);
     const [admindetails, setadmindetails] = useState(null);
     const [email_input,setemail_input]=useState("");
     const boxbg = useColorModeValue('white', 'gray.900');
-    const userContext=useContext(usercontext);
-    const id = userContext.user.id;
-    const name = userContext.user.name;
+    const {id} = useSelector((state)=>state.user.user);
     const toast=useToast();
     const fetch = async () => {
         let res = await GetMembers(orgid);

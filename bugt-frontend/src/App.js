@@ -5,7 +5,8 @@ import { BrowserRouter, Routes, Route, useNavigate, Link, } from 'react-router-d
 import { useState,useContext } from 'react';
 import Bug from './pages/bugs/bug_redirect';
 import Login from './pages/Auth/LoginForm';
-
+import { useSelector,useDispatch } from 'react-redux';
+import { actions } from './state/features/user/userSlice';
 import { usercontext } from './config/useContext';
 import Org from './pages/Org/org_dashboard'
 import BugDetails from './pages/bugs/bugdetails';
@@ -14,6 +15,9 @@ function App() {
   const { colorMode, toggleColorMode } = useColorMode();
   const [temp, settemp] = useState([]);
   const userContext=useContext(usercontext);
+  const state=useSelector((state)=>state.user);
+  const dispatch=useDispatch();
+  const {isLoggedin,user}=state;
   const navigate=useNavigate();
   return (
       <Flex flexDirection={'column'} flex={1} maxH={'100%'} overflow={'hidden'}>
@@ -24,8 +28,8 @@ function App() {
             <Text color={'white'} as={Link} to="/">Home</Text>
             <Text color={'white'} as={Link} to="/orgs">Organisations</Text>
             <Button onClick={toggleColorMode} mr={5} mt={2} colorScheme='gray'>{colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}</Button>
-            <Button disabled={!userContext.isLoggedin} onClick={()=>{
-              userContext.logout();
+            <Button disabled={!isLoggedin} onClick={()=>{
+              dispatch(actions.logout())
             }}>{<ArrowForwardIcon/>}</Button>
           </HStack>
         </Flex>

@@ -36,6 +36,7 @@ function UserCard({userid,name,email,role,onClickfn,deletefn}) {
         </Box>
     )
 }
+
 export default function AssignForm({ bugid, orgid,setstatus }) {
     const [members, setmembers] = useState(null);
     const [email, setemail] = useState("");

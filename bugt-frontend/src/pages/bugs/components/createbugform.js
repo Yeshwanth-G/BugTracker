@@ -8,6 +8,7 @@ import { useContext } from "react";
 import * as yup from 'yup'
 import { button_styles } from "../../../components/button_styles";
 import { bugCreate } from "../../../fetchData";
+import { useSelector } from "react-redux";
 
 const bugSchema = yup.object().shape({
     name: yup.string().required('Required'),
@@ -15,8 +16,7 @@ const bugSchema = yup.object().shape({
 })
 function Createbug({onClose,orgid}) {
     const toast=useToast();
-    const userContext=useContext(usercontext);
-    const id = userContext.user.id;
+    const {id,name} = useSelector((state)=>state.user.user);
     return (
         <VStack p={5}>
             <Formik

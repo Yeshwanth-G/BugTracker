@@ -9,14 +9,13 @@ import { FSignup } from "../../../fetchData";
 import { button_styles } from "../../../components/button_styles";
 import { usercontext } from "../../../config/useContext";
 import { useContext } from "react";
+import { useSelector } from "react-redux";
 const orgSchema = yup.object().shape({
     name: yup.string().required('Required'),
 })
 function CreateOrg({onClose}) {
     const toast=useToast();
-    const userContext=useContext(usercontext);
-    const id = userContext.user.id;
-    const name = userContext.user.name;
+    const {id} = useSelector((state)=>state.user.user);
     return (
         <VStack p={5}>
             <Formik

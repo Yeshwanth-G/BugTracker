@@ -3,9 +3,9 @@ import { useContext } from "react";
 import { usercontext } from "../../config/useContext";
 import Bug_Member from "./bug_member_dashboard";
 import Bug_Admin from "./bug_admin_dashboard";
+import { useSelector } from "react-redux";
 export default function Bug(){
-    const userContext=useContext(usercontext);
-    const id = userContext.user.id;
+    const {id,name} = useSelector((state)=>state.user.user);
     const location=useLocation();
     const adminid=parseInt(location.state.props.adminid);
     if(id==adminid){

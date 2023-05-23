@@ -6,6 +6,8 @@ import ContextWrapper from './config/useContext';
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider, ColorModeProvider, ColorModeScript } from '@chakra-ui/react';
 import { BrowserRouter } from 'react-router-dom';
+import userstore from './state/store';
+import { Provider } from 'react-redux';
 import ProtectedRoute from './config/ProtectedRoute';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,7 +16,9 @@ root.render(
     <BrowserRouter>
     <ColorModeProvider>
     <ContextWrapper>
+      <Provider store={userstore}>
     <App />
+      </Provider>
     </ContextWrapper>
     </ColorModeProvider>
     </BrowserRouter>

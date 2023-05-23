@@ -7,16 +7,15 @@ import CreateOrgForm from "./components/CreateOrg";
 import { usercontext } from "../../config/useContext";
 import SearchOrg from "./components/searchorg";
 import Login from "../Auth/LoginForm"
+import { useSelector } from "react-redux";
 
 export default function Orgainsations() {
     const [isloading, setloading] = useState(false);
     const [allorgs, setallorgs] = useState([]);
     const [yourorgs, setyourorgs] = useState(null);
     const [otherorgs, setotherorgs] = useState(null);
-    const userContext=useContext(usercontext);
     const navigate=useNavigate();
-    const id = userContext.user.id;
-    const name = userContext.user.name;
+    const {id,name} = useSelector((state)=>state.user.user);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const mclose = () => {
         fetch();

@@ -1,15 +1,19 @@
 import { Button, FormControl, Box, FormLabel, Image, Input,Toast, useToast, Breadcrumb, BreadcrumbLink, Link, VStack, Flex, Spacer, InputGroup, InputRightElement, Text, ModalContent, ModalHeader, Modal, ModalBody, ModalOverlay, ModalCloseButton, ModalFooter, useDisclosure, HStack, BreadcrumbItem } from "@chakra-ui/react";
-import { PhoneIcon, AddIcon, WarningIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import {  ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { Field, ErrorMessage, replace } from "formik";
 import { useState,useContext, useEffect } from "react";
 import { Form, Formik } from "formik";
+import hero from "../../assets/hero-illustration.png"
 import Signup from "./Signup";
 import { FLogin } from "../../fetchData";
+import { actions } from "../../state/features/user/userSlice";
+import { useDispatch,useSelector } from "react-redux";
 import { button_styles } from "../../components/button_styles";
 import { useNavigate,useLocation } from "react-router-dom";
 import bughome from "../../assets/bughome.svg"
 import * as yup from 'yup'
 import { usercontext } from "../../config/useContext";
+
 const siginupSchema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Required'),
     password: yup.string()
@@ -23,6 +27,8 @@ export default function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     const userContext=useContext(usercontext);
+    const dispatch=useDispatch();
+    const {isLoggedin,user}=useSelector((state)=>state.user)
     const modal = (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -36,7 +42,7 @@ export default function Login() {
         </Modal>
     )
     useEffect(()=>{
-        if(userContext.isLoggedin==true){
+        if(isLoggedin==true){
             navigate("/orgs",{replace:true})
         }
     },[])
@@ -59,10 +65,12 @@ export default function Login() {
                             isClosable: true,
                         })
                         if(res.status==200){
-                            userContext.login({
+                            dispatch(
+                                actions.login({
                                 name:res.details.name,
                                 id:res.details.id
-                            })
+                            }))
+                            navigate("/orgs",{replace:true})
                         }
                     }}
                 >
@@ -115,5 +123,3 @@ export default function Login() {
         </HStack>
     )
 }
-//format before commit
-//commit messege.

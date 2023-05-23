@@ -28,15 +28,14 @@ import { useState,useEffect,useContext } from "react";
 import Searchbug from "./components/SearchBugs";
 import { useLocation } from "react-router-dom";
 import { usercontext } from "../../config/useContext";
+import { useSelector } from "react-redux";
 export default function Bug_Member({state}){
     const [isloading, setloading] = useState(false);
     const [allbugs, setallbugs] = useState([]);
     const [assignedbugs, setassignedbugs] = useState(null);
     const [raisedbugs, setraisedbugs] = useState(null);
     const [searchbugs,setsearch]=useState([]);
-    const userContext=useContext(usercontext);
-    const id = userContext.user.id;
-    const name = userContext.user.name;
+    const {id,name} = useSelector((state)=>state.user.user);
     const orgid=parseInt(state.orgid);
     const orgname=state.orgname;
     const adminid=parseInt(state.adminid);

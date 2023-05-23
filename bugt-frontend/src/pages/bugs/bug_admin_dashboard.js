@@ -32,6 +32,7 @@ import { useState, useEffect, useContext } from "react";
 import Searchbug from "./components/SearchBugs";
 import { usercontext } from "../../config/useContext";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 export default function Bug_Admin({ state }) {
     const [isloading, setloading] = useState(false);
     const [allbugs, setallbugs] = useState([]);
@@ -40,8 +41,7 @@ export default function Bug_Admin({ state }) {
     const [pendingbugs, setpendingbugs] = useState(null);//pendingbugs
     const [newbugs, setnewbugs] = useState(null);//newbugs
     const userContext = useContext(usercontext);
-    const id = userContext.user.id;
-    const name = userContext.user.name;
+    const {id,name} = useSelector((state)=>state.user.user);
     const orgid = parseInt(state.orgid);
     const orgname = state.orgname;
     const navigate=useNavigate();
